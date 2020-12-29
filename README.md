@@ -26,7 +26,7 @@
 
 + namespace `ic`：
   + namespace `http`
-    + enum `method`: GET/POST/HEAD/...
+    + enum `Method`: GET/POST/HEAD/...
     + enum `StatusCode`: HTTP状态码
     + enum `Version`: V1_0/V1_1/V2_0/...
   + namespace `util`
@@ -186,7 +186,8 @@ request.setVerifySsl(false); // 等价于上面三条语句
 request.setDownloadFile("output.jpg"/*, false*/);
 
 // @range: 单位bytes
-request.setDownloadRange("0-4096");
+// 包括0和4095
+request.setDownloadRange(0, 4095);
 ```
 
 ### 3.10 设置传输进度回调函数
@@ -214,7 +215,7 @@ request.setTransferProgressHandler(url_xfer_info_callback);
 
 `No.5 断点续传`
 
-如果服务器不支持断点续传，会返回错误 `ic::Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE`
+~~如果服务器不支持断点续传，会返回错误 `ic::Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE`~~
 
 ![breakpoint_continue](assets/README/breakpoint_continue.jpg)
 
@@ -222,7 +223,7 @@ request.setTransferProgressHandler(url_xfer_info_callback);
 
 `No.6 分片下载`（可以放到不同的线程中同时下载，即多线程下载）
 
-如果服务器不支持分片下载，会返回错误 `ic::Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE`
+~~如果服务器不支持分片下载，会返回错误 `ic::Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE`~~
 
 ![download_range](assets/README/download_range.jpg)
 

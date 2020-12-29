@@ -7,7 +7,7 @@ bool g_curl_xfer_info(const ic::Request& request,
 void reset_progress_bar();
 
 // defined in test_download_range.cpp
-void download_range(const std::string& url, const std::string& local_file, const std::string& range);
+void download_range(const std::string& url, const std::string& local_file, size_t bytes_start, size_t bytes_end);
 
 // defined in the end of this file
 void download_resume(const std::string& url, const std::string& local_file);
@@ -15,7 +15,7 @@ void download_resume(const std::string& url, const std::string& local_file);
 
 void test_download_resume() {
     /* Download first 1999 bytes */
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "dl_resume.jpg", "0-1999");
+    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "dl_resume.jpg", 0, 1999);
 
     /* resume: breakpoint continuation */
     /* download data remain */

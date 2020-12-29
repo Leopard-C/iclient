@@ -8,9 +8,9 @@ void reset_progress_bar();
 
 void test_download() {
     reset_progress_bar();
-    ic::Request request("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg");
+    ic::Request request("http://public.icrystal.top/1.pdf");
     request.setVerifySsl(false);
-    request.setDownloadFile("dl_test.jpg");
+    request.setDownloadFile("Z:/1.pdf");
     request.setTransferProgressHandler(g_curl_xfer_info);
 
     auto response = request.perform();

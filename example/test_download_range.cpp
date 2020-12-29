@@ -8,7 +8,7 @@ bool g_curl_xfer_info(const ic::Request& request,
                       curl_off_t upload_total_bytes, curl_off_t upload_now_bytes);
 void reset_progress_bar();
 
-void download_range(const std::string& url, const std::string& local_file, const std::string& range);
+void download_range(const std::string& url, const std::string& local_file, size_t bytes_start, size_t bytes_end);
 bool merge_files(const std::vector<std::string>& files, const std::string& output_file);
 
 
@@ -20,24 +20,24 @@ void test_download_range() {
         "dl_part_600-800k.dat",
         "dl_part_800-.dat",
     };
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[0], "0-204799");
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[1], "204800-409599");
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[2], "409600-614399");
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[3], "614400-819199");
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[4], "819200-");
+    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[0],      0, 204799);
+    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[1], 204800, 409599);
+    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[2], 409600, 614399);
+    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[3], 614400, 819199);
+    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[4], 819200, ic::end);
     merge_files(dl_parts, "dl_merged.jpg");
 }
 
-void download_range(const std::string& url, const std::string& local_filename, const std::string& range) {
+void download_range(const std::string& url, const std::string& local_filename, size_t bytes_start, size_t bytes_end) {
     reset_progress_bar();
     printf("downloading %s\n", url.c_str());
     printf("local file: %s\n", local_filename.c_str());
-    printf("range: %s\n", range.c_str());
+    printf("range: %zu-%zu\n", bytes_start, bytes_end);
 
     ic::Request request(url);
     request.setVerifySsl(false);
     request.setDownloadFile(local_filename);
-    request.setDownloadRange(range);
+    request.setDownloadRange(bytes_start, bytes_end);
     request.setTransferProgressHandler(g_curl_xfer_info);
 
     auto response = request.perform();
