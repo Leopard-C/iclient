@@ -59,12 +59,42 @@ Response Executor::perform(Request* request) {
 
     request_ = request;
 
-    /* Normally prepare for query */
-    if (prepare_()) {
-        CURLcode code = curl_easy_perform(curl_);
-        response_.status_ = from_curl_status_code(code);
-        response_.parseFromCurl(curl_);
-    }
+    do {
+        /* Download: Resume or Range */
+        if (!request_->dl_file_.empty() && (request_->dl_resume_ || !request_->dl_range_.empty())) {
+            /* Check wether the server supports "Resume Breakpoint" */
+            if (!(prepare_headonly_())) {
+                break;
+            }
+            CURLcode code = curl_easy_perform(curl_);
+            response_.status_ = from_curl_status_code(code);
+            response_.parseFromCurl(curl_);
+            if (response_.status_ != Status::SUCCESS) {
+                break;
+            }
+            if (!response_.hasHeader("content-length")) {
+                // won't get here
+                response_.status_ = Status::ERROR;
+                break;
+            }
+            if (response_.getHeader("content-length") == "0") {
+                // the file has already full downloaded
+                break;
+            }
+            if (!response_.hasHeader("content-range")) {
+                response_.status_ = Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE;
+                break;
+            }
+            curl_easy_reset(curl_);
+            response_ = Response();
+        }
+
+        if (prepare_normal_()) {
+            CURLcode code = curl_easy_perform(curl_);
+            response_.status_ = from_curl_status_code(code);
+            response_.parseFromCurl(curl_);
+        }
+    } while (false);
 
     if (file_stream_) {
         fclose(file_stream_);
@@ -76,14 +106,7 @@ Response Executor::perform(Request* request) {
     return std::move(response_);
 }
 
-bool Executor::prepare_() {
-    /* URL */
-    if (request_->url_.empty()) {
-        response_.status_ = Status::INVALID_URL;
-        return false;
-    }
-    curl_easy_setopt(curl_, CURLOPT_URL, request_->url_.c_str());
-
+bool Executor::prepare_normal_() {
     /* Http method */
     switch (request_->http_method_) {
     case http::Method::POST:
@@ -118,11 +141,6 @@ bool Executor::prepare_() {
         break;
     }
 
-    /* Process writing header */
-    curl_easy_setopt(curl_, CURLOPT_PRIVATE, this);
-    curl_easy_setopt(curl_, CURLOPT_HEADERFUNCTION, curl_write_header);
-    curl_easy_setopt(curl_, CURLOPT_HEADERDATA, this);
-
     /* Process writing data */
     curl_easy_setopt(curl_, CURLOPT_WRITEFUNCTION, curl_write_data);
     curl_easy_setopt(curl_, CURLOPT_WRITEDATA, this);
@@ -156,23 +174,6 @@ bool Executor::prepare_() {
             }
             curl_easy_setopt(curl_, CURLOPT_MIMEPOST, curl_mime_);
         }
-    }
-
-    /* Http Version */
-    curl_easy_setopt(curl_, CURLOPT_HTTP_VERSION, to_curl(request_->http_version_));
-
-    /* Follow requests */
-    if (request_->max_redirects_ != 0) {
-        curl_easy_setopt(curl_, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl_, CURLOPT_MAXREDIRS, static_cast<long>(request_->max_redirects_));
-    }
-    else {
-        curl_easy_setopt(curl_, CURLOPT_FOLLOWLOCATION, 0L);
-    }
-
-    /* timeout */
-    if (request_->timeout_ms_ > 0) {
-        curl_easy_setopt(curl_, CURLOPT_TIMEOUT_MS, static_cast<long>(request_->timeout_ms_));
     }
 
     /* Transfer info */
@@ -211,6 +212,66 @@ bool Executor::prepare_() {
             response_.status_ = Status::FAILD_OPEN_OUTPUTFILE;
             return false;
         }
+    }
+
+    return prepare_others_();
+}
+
+
+/* Send HEAD Request */
+bool Executor::prepare_headonly_() {
+    /* HEAD method */
+    curl_easy_setopt(curl_, CURLOPT_NOBODY, 1L);
+
+    /* Download to file */
+    if (!request_->dl_file_.empty()) {
+        if (request_->dl_resume_) {
+            long size = util::get_file_size(request_->dl_file_);
+            if (size < 0) {
+                response_.status_ = Status::FAILD_OPEN_OUTPUTFILE;
+                return false;
+            }
+            curl_easy_setopt(curl_, CURLOPT_RESUME_FROM, size);
+        }
+        else {
+            if (!request_->dl_range_.empty()) {
+                curl_easy_setopt(curl_, CURLOPT_RANGE, request_->dl_range_.c_str());
+            }
+        }
+    }
+
+    return prepare_others_();
+}
+
+
+bool Executor::prepare_others_() {
+    /* Process writing header */
+    curl_easy_setopt(curl_, CURLOPT_PRIVATE, this);
+    curl_easy_setopt(curl_, CURLOPT_HEADERFUNCTION, curl_write_header);
+    curl_easy_setopt(curl_, CURLOPT_HEADERDATA, this);
+
+    /* URL */
+    if (request_->url_.empty()) {
+        response_.status_ = Status::EMPTY_URL;
+        return false;
+    }
+    curl_easy_setopt(curl_, CURLOPT_URL, request_->url_.c_str());
+
+    /* Http Version */
+    curl_easy_setopt(curl_, CURLOPT_HTTP_VERSION, to_curl(request_->http_version_));
+
+    /* Follow requests */
+    if (request_->max_redirects_ != 0) {
+        curl_easy_setopt(curl_, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl_, CURLOPT_MAXREDIRS, static_cast<long>(request_->max_redirects_));
+    }
+    else {
+        curl_easy_setopt(curl_, CURLOPT_FOLLOWLOCATION, 0L);
+    }
+
+    /* timeout */
+    if (request_->timeout_ms_ > 0) {
+        curl_easy_setopt(curl_, CURLOPT_TIMEOUT_MS, static_cast<long>(request_->timeout_ms_));
     }
 
     /* Verify SSL */

@@ -1,14 +1,3 @@
-/************************************************************
-** namespace:   ic
-**
-** class name:  Response
-**
-** description: Returned object of request.perform()
-**
-** author: Leopard-C
-**
-** update: 2020/12/29
-************************************************************/
 #ifndef __IC_RESPONSE_H__
 #define __IC_RESPONSE_H__
 
@@ -21,23 +10,27 @@ namespace ic {
 
 /*
  *  iclient Status Code
- */
+**/
 enum class Status {
     BUILDING,
     EXECUTING,
-    INVALID_URL,
+    EMPTY_URL,
     SUCCESS,
     CONNECT_ERROR,
     CONNECT_DNS_ERROR,
     CONNECT_SSL_ERROR,
-    ABORTED_BY_CALLBACK,
     TIMEOUT,
     RESPONSE_EMPTY,
+/* f**k winnt.h */
+#ifdef ERROR
+#undef ERROR
+#endif
+    ERROR,
     FAILD_OPEN_OUTPUTFILE,
     OUTPUTFILE_BEING_USED,
     FAILED_TO_START,
-    DOWNLOAD_ERROR,
-    UNKNOWN_ERROR,
+    NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE,
+    DOWNLOAD_ERROR
 };
 
 Status from_curl_status_code(int code);
@@ -46,11 +39,11 @@ const std::string& to_string(Status code);
 
 /*
  *  class: Response
- */
+**/
 class Response {
     friend class Executor;
 public:
-    Response(Status status = Status::BUILDING);
+    Response();
 
     Status getStatus() const { return status_; }
 

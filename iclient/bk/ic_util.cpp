@@ -4,9 +4,6 @@
 namespace ic {
 namespace util {
 
-/*
- *  URL encode
- */
 std::string escape(const std::string& str) {
     char* escaped = curl_escape(str.c_str(), int(str.length()));
     if (escaped) {
@@ -17,9 +14,6 @@ std::string escape(const std::string& str) {
     return std::string();
 }
 
-/*
- *  URL decode
- */
 std::string unescape(const std::string& str) {
     char* unescaped = curl_unescape(str.c_str(), static_cast<int>(str.length()));
     if (unescaped) {
@@ -30,10 +24,6 @@ std::string unescape(const std::string& str) {
     return std::string();
 }
 
-/*
- *  Merge string list
- *    @sep: separator string
- */
 std::string join(const std::vector<std::string>& strs, const std::string& sep) {
     if (strs.empty()) {
         return std::string();
@@ -57,18 +47,12 @@ std::string join(const std::vector<std::string>& strs, const std::string& sep) {
     return std::move(joined);
 }
 
-/*
- *  trim spaces on the left and right sides.
- */
 std::string& trim(std::string& str) {
     str.erase(str.find_last_not_of(" ") + 1);
     str.erase(0, str.find_first_not_of(" "));
     return str;
 }
 
-/*
- *  trim spaces on the left and right sides.
- */
 std::string& toupper(std::string& str) {
     for (char& c : str) {
         if (c >= 'a' && c <= 'z') {
@@ -78,9 +62,6 @@ std::string& toupper(std::string& str) {
     return str;
 }
 
-/*
- *  upper and lower case
- */
 std::string& tolower(std::string& str) {
     for (char& c : str) {
         if (c >= 'A' && c <= 'Z') {
@@ -90,9 +71,6 @@ std::string& tolower(std::string& str) {
     return str;
 }
 
-/*
- *  Get local file size
- */
 long get_file_size(const std::string& filename) {
     FILE* fp = fopen(filename.c_str(), "rb");
     if (!fp) {
@@ -103,22 +81,6 @@ long get_file_size(const std::string& filename) {
     fseek(fp, 0L, SEEK_SET);
     fclose(fp);
     return size;
-}
-
-
-/*
- *  Calculate "Host" filed in request header
- */
-std::string get_host(const std::string& url) {
-    auto pos_start = url.find("://");
-    if (pos_start == std::string::npos) {
-        pos_start = 0;   /* eg.  www.example.com/example */
-    }
-    else {
-        pos_start += 3;  /* eg.  https://www.example.com/example */
-    }
-    auto pos_end = url.find("/", pos_start);
-    return url.substr(pos_start, pos_end - pos_start);
 }
 
 } // namespace util

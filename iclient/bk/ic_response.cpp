@@ -5,11 +5,11 @@
 
 namespace ic {
 
-extern std::string empty_string;
+extern std::string ic_empty_string;
 
 /*
  *  iclient Status Code
- */
+**/
 Status from_curl_status_code(int code) {
     switch (code) {
     case CURLcode::CURLE_OK:
@@ -28,16 +28,17 @@ Status from_curl_status_code(int code) {
         return Status::DOWNLOAD_ERROR;
     case CURLcode::CURLE_SEND_ERROR:
         return Status::FAILED_TO_START;
-    case CURLcode::CURLE_ABORTED_BY_CALLBACK:
-        return Status::ABORTED_BY_CALLBACK;
     default:
-        return Status::UNKNOWN_ERROR;
+#ifdef ERROR
+#undef ERROR
+#endif
+        return Status::ERROR;
     }
 }
 
 static const std::string STR_STATUS_BUILDING = "BUILDING";
 static const std::string STR_STATUS_EXECUTING = "EXECUTING";
-static const std::string STR_STATUS_INVALID_URL = "INVALID_URL";
+static const std::string STR_EMPTY_URL = "EMPTY_URL";
 static const std::string STR_STATUS_SUCCESS = "SUCCESS";
 static const std::string STR_STATUS_CONNECT_ERROR = "CONNECT_ERROR";
 static const std::string STR_STATUS_CONNECT_DNS_ERROR = "CONNECT_DNS_ERROR";
@@ -45,12 +46,11 @@ static const std::string STR_STATUS_CONNECT_SSL_ERROR = "CONNECT_SSL_ERROR";
 static const std::string STR_STATUS_TIMEOUT = "TIMEOUT";
 static const std::string STR_STATUS_RESPONSE_EMPTY = "RESPONSE_EMPTY";
 static const std::string STR_STATUS_ERROR_FAILED_TO_START = "ERROR_FAILED_TO_START";
-static const std::string STR_STATUS_UNKNOWN_ERROR = "UNKNOWN_ERROR";
+static const std::string STR_STATUS_ERROR = "ERROR";
 static const std::string STR_STATUS_DOWNLOAD_ERROR = "DOWNLOAD_ERROR";
 static const std::string STR_STATUS_ERROR_OPEN_OUTPUTFILE = "ERROR_OPEN_OUTPUTFILE";
 static const std::string STR_STATUS_OUTPUTFILE_BEING_USED = "OUTPUTFILE_BEING_USED";
-static const std::string STR_STATUS_ABORTED_BY_CALLBACK = "ABORTED_BY_CALLBACK";
-
+static const std::string STR_NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE = "NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE";
 
 const std::string& to_string(Status code) {
     switch (code) {
@@ -58,8 +58,8 @@ const std::string& to_string(Status code) {
         return STR_STATUS_BUILDING;
     case Status::EXECUTING:
         return STR_STATUS_EXECUTING;
-    case Status::INVALID_URL:
-        return STR_STATUS_INVALID_URL;
+    case Status::EMPTY_URL:
+        return STR_EMPTY_URL;
     case Status::SUCCESS:
         return STR_STATUS_SUCCESS;
     case Status::CONNECT_ERROR:
@@ -80,24 +80,29 @@ const std::string& to_string(Status code) {
         return STR_STATUS_ERROR_OPEN_OUTPUTFILE;
     case Status::OUTPUTFILE_BEING_USED:
         return STR_STATUS_OUTPUTFILE_BEING_USED;
-    case Status::UNKNOWN_ERROR:
+    case Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE:
+        return STR_NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE;
+#ifdef ERROR
+#undef ERROR
+#endif
+    case Status::ERROR:
     default:
-        return STR_STATUS_UNKNOWN_ERROR;
+        return STR_STATUS_ERROR;
     }
 }
 
 
 /*
  *  class: Response
- */
-Response::Response(Status status/* = Status::BUILDING*/) : status_(status) {
+**/
+Response::Response() {
     data_.reserve(4096);
 }
 
 void Response::parseFromCurl(CURL* curl) {
     long http_response_code = 0L;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_response_code);
-    http_status_code_ = http::from_curl_http_response_code(static_cast<int>(http_response_code));
+    http_status_code_ = http::to_curl(static_cast<int>(http_response_code));
 
     long http_version = 0L;
     curl_easy_getinfo(curl, CURLINFO_HTTP_VERSION, &http_version);
@@ -120,7 +125,7 @@ const std::string& Response::getHeader(std::string name) {
     util::tolower(name);
     auto findIt = headers_.find(name);
     if (findIt == headers_.end()) {
-        return empty_string;
+        return ic_empty_string;
     }
     return findIt->second;
 }

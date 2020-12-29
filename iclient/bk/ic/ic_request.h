@@ -1,12 +1,3 @@
-/*******************************************************
-** namespace:   ic
-**
-** class name:  ProxyData, Request
-**
-** author: Leopard-C
-**
-** update: 2020/12/29
-*******************************************************/
 #ifndef __IC_REQUEST_H__
 #define __IC_REQUEST_H__
 
@@ -20,14 +11,10 @@
 
 namespace ic {
 
-/*
- *   end
- */
-extern size_t end;  /* static_cast<size_t>(-1) */
 
 /*
  *   SSL Certificate Type
- */
+**/
 enum class SslCertificateType {
     PME,
     DER
@@ -38,7 +25,7 @@ const std::string& to_string(SslCertificateType type);
 
 /*
  *  Proxy Type
- */
+**/
 enum class ProxyType {
     HTTP,
     HTTPS
@@ -50,7 +37,7 @@ const std::string& to_string(ProxyType type);
 
 /*
  *  Http Auth Type
- */
+**/
 enum class HttpAuthType {
     BASIC,
     DIGEST,
@@ -188,14 +175,12 @@ public:
     /* Download to file */
     void setDownloadFile(const std::string& downloadFile, size_t resume = false)
         { dl_file_ = downloadFile; dl_resume_ = resume; }
-    void setDownloadRange(size_t bytes_start, size_t bytes_end = end);
+    void setDownloadFile(const std::string& downloadFile, const std::string& range)
+        { dl_file_ = downloadFile; dl_resume_ = false; dl_range_ = range; }
+    void setDownloadRange(const std::string& range) { dl_range_ = range; }
     const std::string& getDownloadFile() const { return dl_file_; }
     const std::string& getDownloadRange() const { return dl_range_; }
     bool isDownloadResume() const { return dl_resume_; }
-
-    /* User Data */
-    void setUserData(void* data) { user_data_ = data; }
-    void* getUserData() const { return user_data_; }
 
     friend size_t curl_write_header(char* buffer, size_t size, size_t nitems, void* user_ptr);
     friend size_t curl_write_data(void* buffer, size_t size, size_t nitems, void* user_ptr);
@@ -249,9 +234,6 @@ private:
     std::string dl_file_;
     std::string dl_range_;
     bool dl_resume_ = false; // true -> dl_range_ will be ignored
-
-    /* User Data */
-    void* user_data_ = nullptr;
 };
 
 }

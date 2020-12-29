@@ -1,12 +1,3 @@
-/*****************************************************************************
-** namespace:   ic::http
-**
-** class name:  Method, Version, StatusCode, ConnectionType, ContentType
-**
-** author: Leopard-C
-**
-** update: 2020/12/29
-*****************************************************************************/
 #ifndef __IC_HTTP_H__
 #define __IC_HTTP_H__
 
@@ -128,7 +119,7 @@ enum class StatusCode {
     HTTP_511_NETWORK_AUTHENTICATION_REQUIRED = 511
 };
 
-StatusCode from_curl_http_response_code(int code);
+StatusCode to_curl(int code);
 const std::string& to_string(StatusCode code);
 
 

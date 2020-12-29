@@ -1,12 +1,3 @@
-/*******************************************************
-** class name:  Executor
-**
-** description: Perform request
-**
-** author: Leopard-C
-**
-** update: 2020/12/02
-*******************************************************/
 #ifndef __IC_EXECUTOR_H__
 #define __IC_EXECUTOR_H__
 
@@ -34,7 +25,10 @@ public:
         curl_off_t upload_total_bytes, curl_off_t upload_now_bytes);
 
 private:
-    bool prepare_();
+    bool prepare_normal_();
+    bool prepare_headonly_();
+
+    bool prepare_others_();
 
 private:
     CURL* curl_ = nullptr;

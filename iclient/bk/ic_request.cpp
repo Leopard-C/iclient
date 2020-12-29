@@ -5,10 +5,7 @@
 
 namespace ic {
 
-size_t end{ static_cast<size_t>(-1) };
-
-std::string empty_string{};
-
+std::string ic_empty_string{};
 
 /*
  *   SSL Certificate Type
@@ -83,14 +80,6 @@ const std::string& to_string(HttpAuthType type) {
 
 /* Perform Request */
 Response Request::perform() {
-    /* Calculate 'Host' field */
-    if (!hasHeader("Host")) {
-        std::string host = util::get_host(url_);
-        if (host.empty()) {
-            return Status::INVALID_URL;
-        }
-    }
-
     Executor executor;
     return executor.perform(this);
 }
@@ -122,14 +111,9 @@ const std::string& Request::getHeader(std::string name) const {
     util::tolower(name);
     auto findIt = headers_.find(name);
     if (findIt == headers_.end()) {
-        return empty_string;
+        return ic_empty_string;
     }
     return findIt->second;
-}
-
-bool Request::hasHeader(std::string name) const {
-    util::tolower(name);
-    return headers_.find(name) != headers_.end();
 }
 
 
@@ -153,7 +137,7 @@ void Request::removeMimeFileField(const std::string& name) {
 const std::string& Request::getMimeStringField(const std::string& name) const {
     auto findIt = mime_string_fields_.find(name);
     if (findIt == mime_string_fields_.end()) {
-        return empty_string;
+        return ic_empty_string;
     }
     return findIt->second;
 }
@@ -161,22 +145,10 @@ const std::string& Request::getMimeStringField(const std::string& name) const {
 const std::string& Request::getMimeFileField(const std::string& name) const {
     auto findIt = mime_file_fields_.find(name);
     if (findIt == mime_file_fields_.end()) {
-        return empty_string;
+        return ic_empty_string;
     }
     return findIt->second;
 }
-
-
-/*
- *  Download to file
- */
-void Request::setDownloadRange(size_t bytes_start, size_t bytes_end/* = end*/) {
-    dl_range_ = std::to_string(bytes_start) + "-";
-    if (bytes_end != end) {
-        dl_range_ += std::to_string(bytes_end);
-    }
-}
-
 
 } // namespace ic
 

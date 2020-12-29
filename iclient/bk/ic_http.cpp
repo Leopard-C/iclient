@@ -107,7 +107,7 @@ const std::string& to_string(Version ver) {
 /*
  *  HTTP Status Code
 **/
-StatusCode from_curl_http_response_code(int code) {
+StatusCode to_curl(int code) {
     switch (code) {
     case 100:
         return StatusCode::HTTP_100_CONTINUE;
