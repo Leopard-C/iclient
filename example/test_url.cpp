@@ -5,6 +5,7 @@ void test_url() {
     url.setParam("min", "1");
     url.setParam("max", "100");
     url.setParam("count", "20");
+    printf("GET: %s\n", url.toString().c_str());
 
     ic::Request request(url.toString());
     request.setVerifySsl(false);
