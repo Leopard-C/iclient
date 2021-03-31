@@ -21,6 +21,7 @@
 + Post请求数据（可设置MIME类型）
 + 自定义传输进度处理（例如下载进度条）
 + 文件下载（普通下载、断点续传、分片下载）
++ 限制下载/上传速度
 
 ## 2. 关键命名空间与类
 
@@ -48,6 +49,7 @@ example
 ├── test_download.cpp
 ├── test_download_range.cpp
 ├── test_download_resume.cpp
+├── test_download_speed_limit.cpp
 ├── test_http_get.cpp
 ├── test_http_post.cpp
 ├── test_http_put.cpp
