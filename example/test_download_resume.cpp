@@ -15,11 +15,11 @@ void download_resume(const std::string& url, const std::string& local_file);
 
 void test_download_resume() {
     /* Download first 1999 bytes */
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "dl_resume.jpg", 0, 1999);
+    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "test_download_resume.jpg", 0, 1999);
 
     /* resume: breakpoint continuation */
     /* download data remain */
-    download_resume("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "dl_resume.jpg");
+    download_resume("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "test_download_resume.jpg");
 }
  
 

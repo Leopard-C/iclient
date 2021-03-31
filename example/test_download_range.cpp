@@ -25,7 +25,7 @@ void test_download_range() {
     download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[2], 409600, 614399);
     download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[3], 614400, 819199);
     download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[4], 819200, ic::end);
-    merge_files(dl_parts, "dl_merged.jpg");
+    merge_files(dl_parts, "test_download_range.jpg");
 }
 
 void download_range(const std::string& url, const std::string& local_filename, size_t bytes_start, size_t bytes_end) {

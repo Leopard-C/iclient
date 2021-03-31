@@ -8,9 +8,9 @@ void reset_progress_bar();
 
 void test_download() {
     reset_progress_bar();
-    ic::Request request("http://public.icrystal.top/1.pdf");
+    ic::Request request("http://i0.hdslb.com/bfs/album/73768e38c6f30480939fd14db5d888ab00afdcd8.jpg");
     request.setVerifySsl(false);
-    request.setDownloadFile("Z:/1.pdf");
+    request.setDownloadFile("test_download.jpg");
     request.setTransferProgressHandler(g_curl_xfer_info);
 
     auto response = request.perform();
