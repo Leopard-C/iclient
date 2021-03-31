@@ -1,6 +1,9 @@
 #include "ic/ic_request.h"
 #include "ic/ic_executor.h"
 #include "ic/ic_util.h"
+#ifdef ICLIENT_LOG
+#  include "../log/logger.h"
+#endif
 
 
 namespace ic {
@@ -83,6 +86,10 @@ const std::string& to_string(HttpAuthType type) {
 
 /* Perform Request */
 Response Request::perform() {
+#ifdef ICLIENT_LOG
+    LInfo("iClient: {}, Proxy: {}", url_, proxy_data_.host);
+#endif
+
     /* Calculate 'Host' field */
     if (!hasHeader("Host")) {
         std::string host = util::get_host(url_);

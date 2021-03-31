@@ -20,6 +20,7 @@ void test_http_put();
 void test_download();
 void test_download_resume();
 void test_download_range();
+void test_download_speed_limit();
 
 void get_terminal_info();
 
@@ -41,6 +42,7 @@ int main() {
     printf("4. test_download\n");
     printf("5. test_download_resume\n");
     printf("6. test_download_range\n");
+    printf("7. test_download_speed_limit\n");
     printf("Choose item(0-6): ");
     fflush(stdout);
 
@@ -56,6 +58,7 @@ int main() {
     case 4: test_download(); break;
     case 5: test_download_resume(); break;
     case 6: test_download_range(); break;
+    case 7: test_download_speed_limit(); break;
     default: printf("Error.\n"); break;
     }
 

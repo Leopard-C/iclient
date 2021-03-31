@@ -19,13 +19,13 @@ void Url::setBaseUrl(const std::string& base_url) {
     baseurl_changed_ = true;
 }
 
-/* Add key-value, the same keys exist will be keep !!! */
+/* Add key-value, the same keys exist will be keeped !!! */
 void Url::addParam(const std::string& key, const std::string& value) {
     params_.emplace(key, value);
     params_changed_ = true;
 }
 
-/* Add key-value, the same keys exist will be remove !!! */
+/* Add key-value, the same keys exist will be removed !!! */
 void Url::setParam(const std::string& key, const std::string& value) {
     removeParam(key);
     addParam(key, value);

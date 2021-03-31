@@ -7,7 +7,7 @@
 **
 ** author: Leopard-C
 **
-** update: 2020/12/29
+** update: 2021/03/31
 ************************************************************/
 #ifndef __IC_RESPONSE_H__
 #define __IC_RESPONSE_H__
@@ -51,6 +51,8 @@ class Response {
     friend class Executor;
 public:
     Response(Status status = Status::BUILDING);
+
+    bool isOk() const { return status_ == Status::SUCCESS && http_status_code_ == http::StatusCode::HTTP_200_OK; }
 
     Status getStatus() const { return status_; }
 

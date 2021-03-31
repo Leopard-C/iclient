@@ -22,11 +22,11 @@ all:  iclient
 
 .PHONY: default all  iclient
 
-iclient: /home/icrystal/dev/cpp/github/iclient/bin/iclient
-/home/icrystal/dev/cpp/github/iclient/bin/iclient: build/objs/iclient/linux/x86_64/release/iclient/ic_url.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_http.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_executor.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_response.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_util.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_request.cpp.o build/objs/iclient/linux/x86_64/release/example/test_url.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_put.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_post.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_resume.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_range.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download.cpp.o build/objs/iclient/linux/x86_64/release/example/main.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_get.cpp.o
+iclient: bin/iclient
+bin/iclient: build/objs/iclient/linux/x86_64/release/iclient/ic_url.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_http.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_executor.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_response.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_util.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_request.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_speed_limit.cpp.o build/objs/iclient/linux/x86_64/release/example/test_url.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_put.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_post.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_resume.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_range.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download.cpp.o build/objs/iclient/linux/x86_64/release/example/main.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_get.cpp.o
 	@echo linking.release iclient
-	@mkdir -p /home/icrystal/dev/cpp/github/iclient/bin
-	@$(LD) -o /home/icrystal/dev/cpp/github/iclient/bin/iclient build/objs/iclient/linux/x86_64/release/iclient/ic_url.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_http.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_executor.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_response.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_util.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_request.cpp.o build/objs/iclient/linux/x86_64/release/example/test_url.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_put.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_post.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_resume.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_range.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download.cpp.o build/objs/iclient/linux/x86_64/release/example/main.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_get.cpp.o $(iclient_LDFLAGS) > build/.build.log 2>&1
+	@mkdir -p bin
+	@$(LD) -o bin/iclient build/objs/iclient/linux/x86_64/release/iclient/ic_url.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_http.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_executor.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_response.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_util.cpp.o build/objs/iclient/linux/x86_64/release/iclient/ic_request.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_speed_limit.cpp.o build/objs/iclient/linux/x86_64/release/example/test_url.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_put.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_post.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_resume.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download_range.cpp.o build/objs/iclient/linux/x86_64/release/example/test_download.cpp.o build/objs/iclient/linux/x86_64/release/example/main.cpp.o build/objs/iclient/linux/x86_64/release/example/test_http_get.cpp.o $(iclient_LDFLAGS) > build/.build.log 2>&1
 
 build/objs/iclient/linux/x86_64/release/iclient/ic_url.cpp.o: iclient/ic_url.cpp
 	@echo ccache compiling.release iclient/ic_url.cpp
@@ -57,6 +57,11 @@ build/objs/iclient/linux/x86_64/release/iclient/ic_request.cpp.o: iclient/ic_req
 	@echo ccache compiling.release iclient/ic_request.cpp
 	@mkdir -p build/objs/iclient/linux/x86_64/release/iclient
 	@$(CCACHE) $(CXX) -c $(iclient_CXXFLAGS) -o build/objs/iclient/linux/x86_64/release/iclient/ic_request.cpp.o iclient/ic_request.cpp > build/.build.log 2>&1
+
+build/objs/iclient/linux/x86_64/release/example/test_download_speed_limit.cpp.o: example/test_download_speed_limit.cpp
+	@echo ccache compiling.release example/test_download_speed_limit.cpp
+	@mkdir -p build/objs/iclient/linux/x86_64/release/example
+	@$(CCACHE) $(CXX) -c $(iclient_CXXFLAGS) -o build/objs/iclient/linux/x86_64/release/example/test_download_speed_limit.cpp.o example/test_download_speed_limit.cpp > build/.build.log 2>&1
 
 build/objs/iclient/linux/x86_64/release/example/test_url.cpp.o: example/test_url.cpp
 	@echo ccache compiling.release example/test_url.cpp
@@ -101,14 +106,15 @@ build/objs/iclient/linux/x86_64/release/example/test_http_get.cpp.o: example/tes
 clean:  clean_iclient
 
 clean_iclient: 
-	@rm -rf /home/icrystal/dev/cpp/github/iclient/bin/iclient
-	@rm -rf /home/icrystal/dev/cpp/github/iclient/bin/iclient.sym
+	@rm -rf bin/iclient
+	@rm -rf bin/iclient.sym
 	@rm -rf build/objs/iclient/linux/x86_64/release/iclient/ic_url.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/iclient/ic_http.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/iclient/ic_executor.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/iclient/ic_response.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/iclient/ic_util.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/iclient/ic_request.cpp.o
+	@rm -rf build/objs/iclient/linux/x86_64/release/example/test_download_speed_limit.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/example/test_url.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/example/test_http_put.cpp.o
 	@rm -rf build/objs/iclient/linux/x86_64/release/example/test_http_post.cpp.o

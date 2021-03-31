@@ -138,22 +138,20 @@ bool Executor::prepare_() {
             curl_mime_free(curl_mime_);
             curl_mime_ = nullptr;
         }
+        curl_mime_ = curl_mime_init(curl_);
         /* String */
-        if (!request_->mime_string_fields_.empty()) {
-            for (const auto& mime_field : request_->mime_string_fields_) {
-                auto* field = curl_mime_addpart(curl_mime_);
-                curl_mime_name(field, mime_field.first.c_str());
-                curl_mime_data(field, mime_field.second.c_str(), static_cast<long>(mime_field.second.length()));
-            }
-            curl_easy_setopt(curl_, CURLOPT_MIMEPOST, curl_mime_);
+        for (const auto& mime_field : request_->mime_string_fields_) {
+            auto* field = curl_mime_addpart(curl_mime_);
+            curl_mime_name(field, mime_field.first.c_str());
+            curl_mime_data(field, mime_field.second.c_str(), static_cast<long>(mime_field.second.length()));
         }
         /* File */
-        else if (!request_->mime_file_fields_.empty()) {
-            for (const auto& mime_field : request_->mime_file_fields_) {
-                auto* field = curl_mime_addpart(curl_mime_);
-                curl_mime_filename(field, mime_field.first.c_str());
-                curl_mime_filedata(field, mime_field.second.c_str());
-            }
+        for (const auto& mime_field : request_->mime_file_fields_) {
+            auto* field = curl_mime_addpart(curl_mime_);
+            curl_mime_name(field, mime_field.first.c_str());
+            curl_mime_filedata(field, mime_field.second.c_str());
+        }
+        if (!request_->mime_string_fields_.empty() || !request_->mime_file_fields_.empty()) {
             curl_easy_setopt(curl_, CURLOPT_MIMEPOST, curl_mime_);
         }
     }
@@ -274,6 +272,14 @@ bool Executor::prepare_() {
     std::string joined = util::join(request_->accept_encodings_, ", ");
     curl_easy_setopt(curl_, CURLOPT_ACCEPT_ENCODING, joined.c_str());
 
+    /* Speed */
+    if (request_->max_upload_speed_ > 0) {
+        curl_easy_setopt(curl_, CURLOPT_MAX_SEND_SPEED_LARGE, request_->max_upload_speed_);
+    }
+    if (request_->max_download_speed_ > 0) {
+        curl_easy_setopt(curl_, CURLOPT_MAX_RECV_SPEED_LARGE, request_->max_download_speed_);
+    }
+
     return true;
 }
 
@@ -313,7 +319,7 @@ size_t curl_write_header(char* buffer, size_t size, size_t nitems, void* user_pt
 
     /* Transform to lower case !!! */
     util::tolower(util::trim(name));
-    util::tolower(util::trim(value));
+    //util::tolower(util::trim(value));
     headers[name] = value;
 
     return data_length;

@@ -5,7 +5,7 @@
 **
 ** author: Leopard-C
 **
-** update: 2020/12/29
+** update: 2021/03/31
 *******************************************************/
 #ifndef __IC_REQUEST_H__
 #define __IC_REQUEST_H__
@@ -91,6 +91,10 @@ public:
     /* Timeout */
     void setTimeout(int millisconds) { timeout_ms_ = millisconds; }
     int getTimeout() const { return timeout_ms_; }
+
+    /* Speed */
+    void setMaxUploadSpeed(int64_t bps) { max_upload_speed_ = bps; }
+    void setMaxDownloadSpeed(int64_t bps) { max_download_speed_ = bps; }
 
     /* Url */
     void setUrl(const std::string& url) { url_ = url; }
@@ -217,8 +221,8 @@ private:
     TransferProgressHandler on_transfer_progress_handler_ = nullptr;
 
     /* SSL */
-    bool verify_ssl_peer_ = true;
-    bool verify_ssl_host_ = true;
+    bool verify_ssl_peer_ = false;
+    bool verify_ssl_host_ = false;
     bool verify_ssl_status_ = false;
     SslCertificateType ssl_cert_type_ = SslCertificateType::PME;
     std::string ssl_cert_file_;
@@ -249,6 +253,10 @@ private:
     std::string dl_file_;
     std::string dl_range_;
     bool dl_resume_ = false; // true -> dl_range_ will be ignored
+
+    /* Upload/Download Speed */
+    int64_t max_upload_speed_ = 0;
+    int64_t max_download_speed_ = 0;
 
     /* User Data */
     void* user_data_ = nullptr;

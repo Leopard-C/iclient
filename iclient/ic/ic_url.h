@@ -17,6 +17,9 @@ public:
     void addParam(const std::string& key, const char* value) {
         addParam(key, std::string(value));
     }
+    void addParam(const std::string& key, char* const value) {
+        addParam(key, std::string(value));
+    }
     template<typename T>
     void addParam(const std::string& key, const T& value) {
         addParam(key, std::to_string(value));
@@ -25,6 +28,9 @@ public:
     /* Add key-value, the same keys exist will be remove !!! */
     void setParam(const std::string& key, const std::string& value);
     void setParam(const std::string& key, const char* value) {
+        setParam(key, std::string(value));
+    }
+    void setParam(const std::string& key, char* const value) {
         setParam(key, std::string(value));
     }
     template<typename T>
