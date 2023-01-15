@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{aebebd4d-cac7-46bd-9e1b-4c72033b5b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{d4f8cb53-5828-4257-b586-678d6d435df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\iclient">
+      <UniqueIdentifier>{05e88bc7-5a59-4e64-9602-db168cde7eb3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\iclient\curl_inc.h">
+      <Filter>include\iclient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\iclient\http.h">
+      <Filter>include\iclient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\iclient\iclient.h">
+      <Filter>include\iclient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\iclient\request.h">
+      <Filter>include\iclient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\iclient\response.h">
+      <Filter>include\iclient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\iclient\url.h">
+      <Filter>include\iclient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\executor.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util.h">
+      <Filter>source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\executor.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\http.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\request.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\response.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\url.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

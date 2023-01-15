@@ -1,3 +1,7 @@
 build
 bin
+lib
 .xmake
+win-vsproj/build
+win-vsproj/.vs
+
