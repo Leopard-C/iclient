@@ -64,7 +64,7 @@ public:
 
     const std::string& server_ip() const { return server_ip_; }
     const std::string& data() const { return data_; }
-    int total_time() const { return total_time_ms_; }
+    double total_time() const { return total_time_; }
     int num_connects() const { return num_connects_; }
     int num_redirects() const { return num_redirects_; }
 
@@ -81,9 +81,9 @@ private:
     Status status_{Status::BUILDING};
     http::Version http_version_{http::Version::V1_1};
     http::StatusCode http_status_code_{http::StatusCode::HTTP_UNKNOWN};
-    int total_time_ms_{0};
     int num_connects_{0};
     int num_redirects_{0};
+    double total_time_{0};  /* total time (unit: seconds) */
     std::string server_ip_;
     std::string data_;
     std::map<std::string, std::string> headers_;

@@ -82,9 +82,8 @@ void Response::ParseFromCurl(CURL* curl) {
     curl_easy_getinfo(curl, CURLINFO_HTTP_VERSION, &http_version);
     http_version_ = static_cast<http::Version>(http_version);
 
-    double total_time = 0L;
-    curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &total_time);
-    total_time_ms_ = static_cast<int>(total_time);
+    /* total time (unit: seconds) */
+    curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &total_time_);
 
     long connect_count = 0L;
     curl_easy_getinfo(curl, CURLINFO_NUM_CONNECTS, &connect_count);
