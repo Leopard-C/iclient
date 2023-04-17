@@ -39,6 +39,54 @@
     + class `Executor`: 真正执行Request请求
     + class `Url`: 封装URL对象，便于添加、合并参数
 
+## 3. 编译构建
+
+如果机器上没有安装`libcurl`，可以在 [Release页面](https://github.com/Leopard-C/iclient/releases/tag/v1.0.1) 下载。
+
+![release-v1.0.1](assets/README/release-v1.0.1.jpg)
+
+下载后，将静态库文件放在`lib`目录下，目录结构如下：
+
+```shell
+lib
+├── linux
+│   └── libcurl.a
+└── windows
+    ├── Win32
+    │   ├── Debug
+    │   │   └── libcurl.lib
+    │   └── Release
+    │       └── libcurl.lib
+    └── x64
+        ├── Debug
+        │   └── libcurl.lib
+        └── Release
+            └── libcurl.lib
+```
+
+
++ `linux`平台：
+
+```shell
+# 使用makefile
+make iclient     # 编译静态库文件 (lib/linux/libiclient.a)
+make example.out # 编译示例代码 (bin/example.out)
+
+# 也可以使用xmake构建
+xmake f -m release
+xmake b iclient
+xmake b example.out
+```
+
++ `windows`平台：
+
+使用`Visual Studio 2019`打开`win-build/iclient.sln`解决方案。
+
+编译`iclient`项目生成静态库文件 （lib/windows/x64/Release/iclient.lib）
+
+编译`example`项目生成示例程序 （bin/example.exe）
+
+
 ## 3. 简单使用
 
 可以参考 `example/`目录下的文件
