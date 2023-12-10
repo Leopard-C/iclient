@@ -6,7 +6,7 @@
 
 + C++版本：`c++11`
 + 支持`Windows`和`Linux`
-+ 引入方法：`#include "iclient/ic.h"`
++ 引入方法：`#include "iclient/iclient.h"`
 
 ## 1. 功能与特点
 
