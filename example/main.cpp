@@ -35,9 +35,6 @@ void resetProgressBar();
 int main() {
     get_terminal_info();
 
-    printf("sizeof(Request)  = %lu\n", sizeof(ic::client::Request));
-    printf("sizeof(Response) = %lu\n", sizeof(ic::client::Response));
-
     printf("0. quit\n");
     printf("1. test_url\n");
     printf("2. test_http_get\n");

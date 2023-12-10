@@ -1,7 +1,8 @@
-build
 bin
+build
 lib
 .xmake
+*.jpg
+*.dat
 win-vsproj/build
 win-vsproj/.vs
-
