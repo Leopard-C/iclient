@@ -48,7 +48,11 @@ int main() {
     fflush(stdout);
 
     int id;
-    scanf("%d", &id);
+    int n = scanf("%d", &id);
+    if (n <= 0) {
+        printf("Invalid input!\n");
+        return 1;
+    }
     printf("------------------------------\n\n");
 
     switch (id) {
@@ -61,7 +65,7 @@ int main() {
     case 6: test_download_resume(); break;
     case 7: test_download_range(); break;
     case 8: test_download_speed_limit(); break;
-    default: printf("Error.\n"); break;
+    default: printf("Invalid input!\n"); break;
     }
 
 #ifdef _WIN32

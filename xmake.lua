@@ -1,5 +1,6 @@
 
 add_rules("mode.debug", "mode.release")
+set_policy("build.warning", true)
 set_languages("c99", "cxx11")
 add_cxflags("-Wreturn-type", "-Wsign-compare", "-Wunused", "-Wswitch")
 add_cxflags("-Wno-deprecated-declarations")
