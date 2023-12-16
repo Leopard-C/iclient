@@ -6,74 +6,38 @@ ifneq ($(VERBOSE),1)
 VV=@
 endif
 
-CXX=/usr/bin/gcc
 CC=/usr/bin/gcc
-MM=/usr/bin/gcc
-MXX=/usr/bin/gcc
+CXX=/usr/bin/gcc
 AS=/usr/bin/gcc
+MXX=/usr/bin/gcc
+MM=/usr/bin/gcc
 
 AR=/usr/bin/ar
 LD=/usr/bin/g++
 SH=/usr/bin/g++
 
-iclient_AR=/usr/bin/ar
-iclient_CXX=/usr/bin/gcc
-iclient_CXX=/usr/bin/gcc
 example.out_LD=/usr/bin/g++
 example.out_CXX=/usr/bin/gcc
 example.out_CXX=/usr/bin/gcc
+iclient_AR=/usr/bin/ar
+iclient_CXX=/usr/bin/gcc
+iclient_CXX=/usr/bin/gcc
 
+example.out_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++11 -Iinclude -Wreturn-type -Wsign-compare -Wunused -Wswitch -Wno-deprecated-declarations -DNDEBUG
+example.out_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++11 -Iinclude -Wreturn-type -Wsign-compare -Wunused -Wswitch -Wno-deprecated-declarations -DNDEBUG
+example.out_LDFLAGS=-m64 -Llib/linux/x86_64 -s -liclient -lcurl -lpthread -ldl
 iclient_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++11 -Iinclude -Wreturn-type -Wsign-compare -Wunused -Wswitch -Wno-deprecated-declarations -DNDEBUG
 iclient_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++11 -Iinclude -Wreturn-type -Wsign-compare -Wunused -Wswitch -Wno-deprecated-declarations -DNDEBUG
 iclient_ARFLAGS=-cr
-example.out_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++11 -Iinclude -Wreturn-type -Wsign-compare -Wunused -Wswitch -Wno-deprecated-declarations -DNDEBUG
-example.out_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++11 -Iinclude -Wreturn-type -Wsign-compare -Wunused -Wswitch -Wno-deprecated-declarations -DNDEBUG
-example.out_LDFLAGS=-m64 -Llib/linux -s -liclient -lcurl -lpthread -ldl
 
-default:  iclient example.out
+default:  example.out iclient
 
-all:  iclient example.out
+all:  example.out iclient
 
-.PHONY: default all  iclient example.out
-
-iclient: lib/linux/libiclient.a
-lib/linux/libiclient.a: build/.objs/iclient/linux/x86_64/release/src/request.cpp.o build/.objs/iclient/linux/x86_64/release/src/response.cpp.o build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o build/.objs/iclient/linux/x86_64/release/src/http.cpp.o build/.objs/iclient/linux/x86_64/release/src/url.cpp.o build/.objs/iclient/linux/x86_64/release/src/util.cpp.o
-	@echo linking.release libiclient.a
-	@mkdir -p lib/linux
-	$(VV)$(iclient_AR) $(iclient_ARFLAGS) lib/linux/libiclient.a build/.objs/iclient/linux/x86_64/release/src/request.cpp.o build/.objs/iclient/linux/x86_64/release/src/response.cpp.o build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o build/.objs/iclient/linux/x86_64/release/src/http.cpp.o build/.objs/iclient/linux/x86_64/release/src/url.cpp.o build/.objs/iclient/linux/x86_64/release/src/util.cpp.o
-
-build/.objs/iclient/linux/x86_64/release/src/request.cpp.o: src/request.cpp
-	@echo compiling.release src/request.cpp
-	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
-	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/request.cpp.o src/request.cpp
-
-build/.objs/iclient/linux/x86_64/release/src/response.cpp.o: src/response.cpp
-	@echo compiling.release src/response.cpp
-	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
-	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/response.cpp.o src/response.cpp
-
-build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o: src/executor.cpp
-	@echo compiling.release src/executor.cpp
-	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
-	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o src/executor.cpp
-
-build/.objs/iclient/linux/x86_64/release/src/http.cpp.o: src/http.cpp
-	@echo compiling.release src/http.cpp
-	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
-	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/http.cpp.o src/http.cpp
-
-build/.objs/iclient/linux/x86_64/release/src/url.cpp.o: src/url.cpp
-	@echo compiling.release src/url.cpp
-	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
-	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/url.cpp.o src/url.cpp
-
-build/.objs/iclient/linux/x86_64/release/src/util.cpp.o: src/util.cpp
-	@echo compiling.release src/util.cpp
-	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
-	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/util.cpp.o src/util.cpp
+.PHONY: default all  example.out iclient
 
 example.out: bin/example.out
-bin/example.out: lib/linux/libiclient.a build/.objs/example.out/linux/x86_64/release/example/test_url.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_range.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_post.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_speed_limit.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download.cpp.o build/.objs/example.out/linux/x86_64/release/example/main.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_resume.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_put.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_get.cpp.o
+bin/example.out: lib/linux/x86_64/libiclient.a build/.objs/example.out/linux/x86_64/release/example/test_url.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_range.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_post.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_speed_limit.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download.cpp.o build/.objs/example.out/linux/x86_64/release/example/main.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_resume.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_put.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_get.cpp.o
 	@echo linking.release example.out
 	@mkdir -p bin
 	$(VV)$(example.out_LD) -o bin/example.out build/.objs/example.out/linux/x86_64/release/example/test_url.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_range.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_post.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_speed_limit.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download.cpp.o build/.objs/example.out/linux/x86_64/release/example/main.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_download_resume.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_put.cpp.o build/.objs/example.out/linux/x86_64/release/example/test_http_get.cpp.o $(example.out_LDFLAGS)
@@ -123,17 +87,43 @@ build/.objs/example.out/linux/x86_64/release/example/test_http_get.cpp.o: exampl
 	@mkdir -p build/.objs/example.out/linux/x86_64/release/example
 	$(VV)$(example.out_CXX) -c $(example.out_CXXFLAGS) -o build/.objs/example.out/linux/x86_64/release/example/test_http_get.cpp.o example/test_http_get.cpp
 
-clean:  clean_iclient clean_example.out
+iclient: lib/linux/x86_64/libiclient.a
+lib/linux/x86_64/libiclient.a: build/.objs/iclient/linux/x86_64/release/src/request.cpp.o build/.objs/iclient/linux/x86_64/release/src/response.cpp.o build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o build/.objs/iclient/linux/x86_64/release/src/http.cpp.o build/.objs/iclient/linux/x86_64/release/src/url.cpp.o build/.objs/iclient/linux/x86_64/release/src/util.cpp.o
+	@echo linking.release libiclient.a
+	@mkdir -p lib/linux/x86_64
+	$(VV)$(iclient_AR) $(iclient_ARFLAGS) lib/linux/x86_64/libiclient.a build/.objs/iclient/linux/x86_64/release/src/request.cpp.o build/.objs/iclient/linux/x86_64/release/src/response.cpp.o build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o build/.objs/iclient/linux/x86_64/release/src/http.cpp.o build/.objs/iclient/linux/x86_64/release/src/url.cpp.o build/.objs/iclient/linux/x86_64/release/src/util.cpp.o
 
-clean_iclient: 
-	@rm -rf lib/linux/libiclient.a
-	@rm -rf lib/linux/iclient.sym
-	@rm -rf build/.objs/iclient/linux/x86_64/release/src/request.cpp.o
-	@rm -rf build/.objs/iclient/linux/x86_64/release/src/response.cpp.o
-	@rm -rf build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o
-	@rm -rf build/.objs/iclient/linux/x86_64/release/src/http.cpp.o
-	@rm -rf build/.objs/iclient/linux/x86_64/release/src/url.cpp.o
-	@rm -rf build/.objs/iclient/linux/x86_64/release/src/util.cpp.o
+build/.objs/iclient/linux/x86_64/release/src/request.cpp.o: src/request.cpp
+	@echo compiling.release src/request.cpp
+	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
+	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/request.cpp.o src/request.cpp
+
+build/.objs/iclient/linux/x86_64/release/src/response.cpp.o: src/response.cpp
+	@echo compiling.release src/response.cpp
+	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
+	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/response.cpp.o src/response.cpp
+
+build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o: src/executor.cpp
+	@echo compiling.release src/executor.cpp
+	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
+	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o src/executor.cpp
+
+build/.objs/iclient/linux/x86_64/release/src/http.cpp.o: src/http.cpp
+	@echo compiling.release src/http.cpp
+	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
+	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/http.cpp.o src/http.cpp
+
+build/.objs/iclient/linux/x86_64/release/src/url.cpp.o: src/url.cpp
+	@echo compiling.release src/url.cpp
+	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
+	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/url.cpp.o src/url.cpp
+
+build/.objs/iclient/linux/x86_64/release/src/util.cpp.o: src/util.cpp
+	@echo compiling.release src/util.cpp
+	@mkdir -p build/.objs/iclient/linux/x86_64/release/src
+	$(VV)$(iclient_CXX) -c $(iclient_CXXFLAGS) -o build/.objs/iclient/linux/x86_64/release/src/util.cpp.o src/util.cpp
+
+clean:  clean_example.out clean_iclient
 
 clean_example.out:  clean_iclient
 	@rm -rf bin/example.out
@@ -147,4 +137,14 @@ clean_example.out:  clean_iclient
 	@rm -rf build/.objs/example.out/linux/x86_64/release/example/test_download_resume.cpp.o
 	@rm -rf build/.objs/example.out/linux/x86_64/release/example/test_http_put.cpp.o
 	@rm -rf build/.objs/example.out/linux/x86_64/release/example/test_http_get.cpp.o
+
+clean_iclient: 
+	@rm -rf lib/linux/x86_64/libiclient.a
+	@rm -rf lib/linux/x86_64/iclient.sym
+	@rm -rf build/.objs/iclient/linux/x86_64/release/src/request.cpp.o
+	@rm -rf build/.objs/iclient/linux/x86_64/release/src/response.cpp.o
+	@rm -rf build/.objs/iclient/linux/x86_64/release/src/executor.cpp.o
+	@rm -rf build/.objs/iclient/linux/x86_64/release/src/http.cpp.o
+	@rm -rf build/.objs/iclient/linux/x86_64/release/src/url.cpp.o
+	@rm -rf build/.objs/iclient/linux/x86_64/release/src/util.cpp.o
 

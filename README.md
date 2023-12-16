@@ -2,8 +2,6 @@
 
 【C++】基于`libcurl`的HTTP请求客户端。
 
-## 0. 说明
-
 + C++版本：`c++11`
 + 支持`Windows`和`Linux`
 + 引入方法：`#include "iclient/iclient.h"`
@@ -69,7 +67,7 @@ lib
 
 ```shell
 # 使用makefile
-make iclient     # 编译静态库文件 (lib/linux/libiclient.a)
+make iclient     # 编译静态库文件 (lib/linux/x86_64/libiclient.a)
 make example.out # 编译示例代码 (bin/example.out)
 
 # 也可以使用xmake构建
@@ -272,15 +270,11 @@ request.set_transfer_progress_handler(url_xfer_info_callback);
 
 `No.5 断点续传`
 
-~~如果服务器不支持断点续传，会返回错误 `ic::Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE`~~
-
 ![breakpoint_continue](assets/README/breakpoint_continue.jpg)
 
 
 
 `No.6 分片下载`（可以放到不同的线程中同时下载，即多线程下载）
-
-~~如果服务器不支持分片下载，会返回错误 `ic::Status::NOT_SUPPORT_DOWNLOAD_RESUME_OR_RANGE`~~
 
 ![download_range](assets/README/download_range.jpg)
 
