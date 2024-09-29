@@ -1,5 +1,8 @@
 #include "iclient/iclient.h"
 
+/* download file url */
+extern const char* g_test_download_file_url;
+
 /* Progress bar */
 bool g_curl_xfer_info(const ic::client::Request& request,
                       curl_off_t download_total_bytes, curl_off_t download_now_bytes,
@@ -14,12 +17,12 @@ void download_resume(const std::string& url, const std::string& local_file);
 
 
 void test_download_resume() {
-    /* Download first 1999 bytes */
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "test_download_resume.jpg", 0, 1999);
+    /* Download first 4096 bytes */
+    download_range(g_test_download_file_url, "test_download_resume.jpg", 0, 4095);
 
     /* resume: breakpoint continuation */
     /* download data remain */
-    download_resume("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", "test_download_resume.jpg");
+    download_resume(g_test_download_file_url, "test_download_resume.jpg");
 }
 
 /**

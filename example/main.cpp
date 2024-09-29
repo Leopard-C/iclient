@@ -1,3 +1,12 @@
+﻿/* VLD (memory leak detector)  */
+#ifdef _WIN32
+#  define _USE_VLD 0
+#  if _USE_VLD == 1
+#    pragma comment(lib, "D:/CPP_INCLUDE/vld-2.7.0/lib/Win64/vld.lib")
+#    include <D:/CPP_INCLUDE/vld-2.7.0/include/vld.h>
+#  endif // _USE_VLD
+#endif // _WIN32
+
 #include "iclient/iclient.h"
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +21,8 @@
 int g_term_width;
 int g_last_symbol_count = 0;
 int g_total_symbol_count = 0;
+
+const char* g_test_download_file_url = "https://i-blog.csdnimg.cn/direct/c96ecd7d2a23496b895e7f5bdec7f3ae.jpeg";
 
 void test_url();
 void test_http_get();
@@ -29,7 +40,7 @@ void get_terminal_info();
 bool g_curl_xfer_info(const ic::client::Request& request,
                       curl_off_t download_total_bytes, curl_off_t download_now_bytes,
                       curl_off_t upload_total_bytes, curl_off_t upload_now_bytes);
-void resetProgressBar();
+void reset_progress_bar();
 
 
 int main() {
@@ -56,16 +67,16 @@ int main() {
     printf("------------------------------\n\n");
 
     switch (id) {
-    case 0: break;
-    case 1: test_url(); break;
-    case 2: test_http_get(); break;
-    case 3: test_http_post(); break;
-    case 4: test_http_put(); break;
-    case 5: test_download(); break;
-    case 6: test_download_resume(); break;
-    case 7: test_download_range(); break;
-    case 8: test_download_speed_limit(); break;
-    default: printf("Invalid input!\n"); break;
+        case 0: break;
+        case 1: test_url(); break;
+        case 2: test_http_get(); break;
+        case 3: test_http_post(); break;
+        case 4: test_http_put(); break;
+        case 5: test_download(); break;
+        case 6: test_download_resume(); break;
+        case 7: test_download_range(); break;
+        case 8: test_download_speed_limit(); break;
+        default: printf("Invalid input!\n"); break;
     }
 
 #ifdef _WIN32

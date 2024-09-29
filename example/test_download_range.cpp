@@ -1,6 +1,8 @@
 #include "iclient/iclient.h"
 #include <vector>
 
+/* download file url */
+extern const char* g_test_download_file_url;
 
 /* Progress bar */
 bool g_curl_xfer_info(const ic::client::Request& request,
@@ -14,17 +16,18 @@ bool merge_files(const std::vector<std::string>& files, const std::string& outpu
 
 void test_download_range() {
     std::vector<std::string> dl_parts = {
-        "dl_part_0-200k.dat",
-        "dl_part_200-400k.dat",
-        "dl_part_400-600k.dat",
-        "dl_part_600-800k.dat",
-        "dl_part_800-.dat",
+        "dl_part_0-512k.dat",
+        "dl_part_512-1024k.dat",
+        "dl_part_1024-1536k.dat",
+        "dl_part_1536-2048k.dat",
+        "dl_part_2048-.dat",
     };
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[0],      0, 204799);
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[1], 204800, 409599);
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[2], 409600, 614399);
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[3], 614400, 819199);
-    download_range("https://s3.ax1x.com/2020/11/27/DrtEm8.jpg", dl_parts[4], 819200, ic::client::end);
+    constexpr size_t KB = 1024;
+    download_range(g_test_download_file_url, dl_parts[0],         0,  512 * KB - 1);
+    download_range(g_test_download_file_url, dl_parts[1],  512 * KB, 1024 * KB - 1);
+    download_range(g_test_download_file_url, dl_parts[2], 1024 * KB, 1536 * KB - 1);
+    download_range(g_test_download_file_url, dl_parts[3], 1536 * KB, 2048 * KB - 1);
+    download_range(g_test_download_file_url, dl_parts[4], 2048 * KB, ic::client::end);
     merge_files(dl_parts, "test_download_range.jpg");
 }
 
