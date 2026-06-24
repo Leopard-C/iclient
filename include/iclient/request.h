@@ -85,6 +85,23 @@ public:
     using TransferProgressHandler = std::function<bool(const Request& request, int64_t download_total_bytes,
             int64_t download_now_bytes, int64_t upload_total_bytes, int64_t upload_now_bytes)>;
 
+    /**
+     * @brief Transfer Header Handler.
+     * @note Headers are in lowercase.
+     * 
+     * @retval true: Continue transfer response data
+     * @retval false: Cancel.
+     */
+    using TransferHeaderHandler = std::function<bool(const std::map<std::string, std::string>& headers)>;
+
+    /**
+     * @brief Transfer Data Handler
+     * 
+     * @retval true: Continue transfer response data
+     * @retval false: Cancel.
+     */
+    using TransferDataHandler = std::function<bool(void* data, size_t num_bytes)>;
+
 public:
     Request() = default;
     Request(const std::string& url) : url_(url) {}
@@ -100,9 +117,27 @@ public:
     void set_transfer_progress_handler(TransferProgressHandler handler)
         { on_transfer_progress_handler_ = handler; }
 
+    void set_transfer_header_handler(TransferHeaderHandler handler)
+        { on_transfer_header_handler_ = handler; }
+
+    void set_transfer_data_handler(TransferDataHandler handler)
+        { on_transfer_data_handler_ = handler; }
+
+    /* TCP Keep-Alive */
+    bool tcp_keep_alive() const { return tcp_keep_alive_; }
+    int tcp_keep_alive_idle() const { return tcp_keep_alive_idle_; }
+    int tcp_keep_alive_interval() const { return tcp_keep_alive_interval_; }
+    void set_tcp_keep_alive(bool keep) { tcp_keep_alive_ = keep; }
+    void set_tcp_keep_alive_idle(int idle_seconds) { tcp_keep_alive_idle_ = idle_seconds; }
+    void set_tcp_keep_alive_interval(int interval_seconds) { tcp_keep_alive_interval_ = interval_seconds; }
+
     /* Timeout */
     int timeout() const { return timeout_ms_; }
     void set_timeout(int milliseconds) { timeout_ms_ = milliseconds; }
+
+    /* Connection timeout */
+    int connection_timeout() const { return connection_timeout_ms_; }
+    void set_connection_timeout(int milliseconds) { connection_timeout_ms_ = milliseconds; }
 
     /* Speed */
     int64_t max_upload_speed() const { return max_upload_speed_; }
@@ -235,8 +270,16 @@ private:
     bool auto_referer_{true};
     std::string referer_;
 
+    /* TCP Keep-Alive */
+    bool tcp_keep_alive_{false};
+    int tcp_keep_alive_idle_{60};
+    int tcp_keep_alive_interval_{60};
+
     /* Timeout: millseconds */
     int timeout_ms_{-1};
+
+    /* Connection timeout: millseconds */
+    int connection_timeout_ms_{-1};
 
     /* Upload/Download Speed, bytes per second */
     int64_t max_upload_speed_{0};
@@ -250,6 +293,10 @@ private:
 
     /* Transfer progress */
     TransferProgressHandler on_transfer_progress_handler_{nullptr};
+    /* Response header progress (in lowercase) */
+    TransferHeaderHandler on_transfer_header_handler_{nullptr};
+    /* Response data progress (in lowercase) */
+    TransferDataHandler on_transfer_data_handler_{nullptr};
 
     /* SSL */
     bool verify_ssl_peer_{false};

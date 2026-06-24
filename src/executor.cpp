@@ -168,9 +168,21 @@ bool Executor::Prepare() {
         curl_easy_setopt(curl_, CURLOPT_REFERER, request_.referer_.c_str());
     }
 
+    /* TCP Keep Alive */
+    if (request_.tcp_keep_alive_) {
+        curl_easy_setopt(curl_, CURLOPT_TCP_KEEPALIVE, 1L);
+        curl_easy_setopt(curl_, CURLOPT_TCP_KEEPIDLE, static_cast<long>(request_.tcp_keep_alive_idle_));
+        curl_easy_setopt(curl_, CURLOPT_TCP_KEEPINTVL, static_cast<long>(request_.tcp_keep_alive_interval_));
+    }
+
     /* timeout */
     if (request_.timeout_ms_ > 0) {
         curl_easy_setopt(curl_, CURLOPT_TIMEOUT_MS, static_cast<long>(request_.timeout_ms_));
+    }
+
+    /* connection timeout */
+    if (request_.connection_timeout_ms_ > 0) {
+        curl_easy_setopt(curl_, CURLOPT_CONNECTTIMEOUT_MS, static_cast<long>(request_.connection_timeout_ms_));
     }
 
     /* ip resolve */
@@ -295,52 +307,66 @@ bool Executor::Prepare() {
  */
 size_t curl_write_header(char* buffer, size_t size, size_t nitems, void* user_ptr) {
     Executor* executor_ptr = static_cast<Executor*>(user_ptr);
-    auto& headers = executor_ptr->response_.headers_;
-    const size_t data_length = size * nitems;
-    if (data_length == 0) {
-        return 0;
+    auto& request = executor_ptr->request_;
+    auto& response = executor_ptr->response_;
+    auto& headers = response.headers_;
+
+    do {
+        const size_t data_length = size * nitems;
+        if (data_length == 0) {
+            break;
+        }
+
+        std::string data(buffer, data_length);
+
+        if (data_length == 2 && data == "\r\n") {
+            break;
+        }
+        if (data_length >= 4 && data.substr(0, 5) == "HTTP/") {
+            break;
+        }
+        if (data_length >= 2 && data[data_length - 2] == '\r' && data[data_length - 1] == '\n') {
+            data.pop_back();
+            data.pop_back();
+        }
+
+        auto pos = data.find(':');
+        if (pos == std::string::npos) {
+            break;
+        }
+
+        std::string name = data.substr(0, pos);
+        std::string value = data.substr(pos + 1);
+
+        /* Transform header's name to lower case !!! */
+        util::trim(name);
+        util::to_lower(name);
+        headers[name] = value;
+    } while (false);
+
+    if (request.on_transfer_header_handler_ && !request.on_transfer_header_handler_(headers)) {
+        return CURL_WRITEFUNC_PAUSE;
     }
 
-    std::string data(buffer, data_length);
-
-    if (data_length == 2 && data == "\r\n") {
-        return data_length;
-    }
-    if (data_length >= 4 && data.substr(0, 5) == "HTTP/") {
-        return data_length;
-    }
-    if (data_length >= 2 && data[data_length - 2] == '\r' && data[data_length - 1] == '\n') {
-        data.pop_back();
-        data.pop_back();
-    }
-
-    auto pos = data.find(':');
-    if (pos == std::string::npos) {
-        return data_length;
-    }
-
-    std::string name = data.substr(0, pos);
-    std::string value = data.substr(pos + 1);
-
-    /* Transform header's name to lower case !!! */
-    util::trim(name);
-    util::to_lower(name);
-    headers[name] = value;
-
-    return data_length;
+    return nitems;
 }
-
 
 /**
  * @brief process accepted data
  */
 size_t curl_write_data(void* buffer, size_t size, size_t nitems, void* user_ptr) {
     Executor* executor_ptr = static_cast<Executor*>(user_ptr);
+    auto& request = executor_ptr->request_;
+    auto& response = executor_ptr->response_;
+
     const size_t data_length = size * nitems;
     if (data_length > 0) {
         /* Write to file */
         if (executor_ptr->file_stream_) {
-            fwrite(buffer, size, nitems, executor_ptr->file_stream_);
+            size_t write_nitems = fwrite(buffer, size, nitems, executor_ptr->file_stream_);
+            if (write_nitems != nitems) {
+                return CURL_WRITEFUNC_PAUSE;
+            }
         }
         /* Write to response data */
         else {
@@ -348,7 +374,12 @@ size_t curl_write_data(void* buffer, size_t size, size_t nitems, void* user_ptr)
             response.data_.append(static_cast<const char*>(buffer), data_length);
         }
     }
-    return data_length;
+
+    if (request.on_transfer_data_handler_ && !request.on_transfer_data_handler_(buffer, data_length)) {
+        return CURL_WRITEFUNC_PAUSE;
+    }
+
+    return nitems;
 }
 
 int curl_xfer_info(void* clientp, curl_off_t download_total_bytes, curl_off_t download_now_bytes,
