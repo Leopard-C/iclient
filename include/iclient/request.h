@@ -10,6 +10,7 @@
 #ifndef IC_CLIENT_REQUEST_H_
 #define IC_CLIENT_REQUEST_H_
 
+#include <atomic>
 #include <functional>
 #include <map>
 #include <string>
@@ -255,7 +256,7 @@ public:
         curl_off_t upload_total_bytes, curl_off_t upload_now_bytes);
 
 private:
-    bool cancel_{false};
+    std::atomic_bool cancel_{false};
 
     std::string url_;
     http::Method http_method_{http::Method::HTTP_GET};

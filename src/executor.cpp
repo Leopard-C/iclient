@@ -358,6 +358,9 @@ size_t curl_write_data(void* buffer, size_t size, size_t nitems, void* user_ptr)
     Executor* executor_ptr = static_cast<Executor*>(user_ptr);
     auto& request = executor_ptr->request_;
     auto& response = executor_ptr->response_;
+    if (request.cancel_) {
+        return CURL_WRITEFUNC_PAUSE;
+    }
 
     const size_t data_length = size * nitems;
     if (data_length > 0) {
