@@ -373,7 +373,6 @@ size_t curl_write_data(void* buffer, size_t size, size_t nitems, void* user_ptr)
         }
         /* Write to response data */
         else {
-            Response& response = executor_ptr->response_;
             response.data_.append(static_cast<const char*>(buffer), data_length);
         }
     }
