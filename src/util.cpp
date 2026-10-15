@@ -5,6 +5,14 @@ namespace ic {
 namespace client {
 namespace util {
 
+#ifdef _WIN32
+	#define ICLIENT_FSEEK _fseeki64
+	#define ICLIENT_FTELL _ftelli64
+#else
+	#define ICLIENT_FSEEK fseek
+	#define ICLIENT_FTELL ftell
+#endif
+
 /**
  * @brief URL encode
  */
@@ -83,14 +91,13 @@ std::string& to_lower(std::string& str) {
     return str;
 }
 
-long get_file_size(const std::string& filename) {
+int64_t get_file_size(const std::string& filename) {
     FILE* fp = fopen(filename.c_str(), "rb");
     if (!fp) {
         return -1;
     }
-    fseek(fp, 0L, SEEK_END);
-    long size = ftell(fp);
-    //fseek(fp, 0L, SEEK_SET);
+    ICLIENT_FSEEK(fp, 0, SEEK_END);
+    int64_t size = ICLIENT_FTELL(fp);
     fclose(fp);
     return size;
 }

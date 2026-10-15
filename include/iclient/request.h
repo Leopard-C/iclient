@@ -35,10 +35,13 @@ const char* to_string(SslCertificateType type);
 
 enum class ProxyType {
     HTTP,
-    HTTPS
+    HTTPS,
+    SOCKS4,
+    SOCKS4A,
+    SOCKS5
 };
 
-int to_curl(ProxyType type);
+long to_curl(ProxyType type);
 const char* to_string(ProxyType type);
 
 

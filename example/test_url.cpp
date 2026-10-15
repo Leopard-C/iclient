@@ -2,10 +2,9 @@
 
 void test_url() {
     using namespace ic::client;
-    Url url("https://api.icrystal.top/util/random");
-    url.SetParam("min", "1");
-    url.SetParam("max", "100");
-    url.SetParam("count", "20");
+    Url url("https://httpbin.org/get");
+    url.SetParam("name", "Tom");
+    url.SetParam("age", 25);
     printf("GET: %s\n", url.ToString().c_str());
 
     Request request(url.ToString());

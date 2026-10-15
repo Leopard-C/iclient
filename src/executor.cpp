@@ -124,7 +124,7 @@ bool Executor::Prepare() {
 
     /* POST Data */
     if (!request_.data_.empty()) {
-        curl_easy_setopt(curl_, CURLOPT_POSTFIELDSIZE, static_cast<long>(request_.data_.size()));
+        curl_easy_setopt(curl_, CURLOPT_POSTFIELDSIZE_LARGE, request_.data_.size());
         curl_easy_setopt(curl_, CURLOPT_POSTFIELDS, request_.data_.c_str());
     }
     else {
@@ -186,7 +186,7 @@ bool Executor::Prepare() {
     }
 
     /* ip resolve */
-    curl_easy_setopt(curl_, CURLOPT_IPRESOLVE, request_.ip_resolve_);
+    curl_easy_setopt(curl_, CURLOPT_IPRESOLVE, static_cast<long>(request_.ip_resolve_));
 
     /* Transfer info */
     if (request_.on_transfer_progress_handler_ != nullptr) {
@@ -206,12 +206,12 @@ bool Executor::Prepare() {
         }
         if (request_.download_resume_) {
             /* Get file's current size */
-            long size = util::get_file_size(request_.download_file_);
+            int64_t size = util::get_file_size(request_.download_file_);
             if (size < 0) {
                 response_.status_ = Status::FAILED_TO_OPEN_OUTPUTFILE;
                 return false;
             }
-            curl_easy_setopt(curl_, CURLOPT_RESUME_FROM, size);
+            curl_easy_setopt(curl_, CURLOPT_RESUME_FROM_LARGE, size);
             file_stream_ = fopen(request_.download_file_.c_str(), "ab+");  // append
         }
         else {
@@ -273,7 +273,7 @@ bool Executor::Prepare() {
         const auto& proxyData = request_.proxy();
         curl_easy_setopt(curl_, CURLOPT_PROXY, proxyData.host.c_str());
         curl_easy_setopt(curl_, CURLOPT_PROXYTYPE, to_curl(proxyData.type));
-        curl_easy_setopt(curl_, CURLOPT_PROXYPORT, proxyData.port);
+        curl_easy_setopt(curl_, CURLOPT_PROXYPORT, static_cast<long>(proxyData.port));
         if (!proxyData.username.empty()) {
             curl_easy_setopt(curl_, CURLOPT_PROXYAUTH, to_curl(proxyData.auth_type));
             curl_easy_setopt(curl_, CURLOPT_PROXYUSERNAME, proxyData.username.c_str());
@@ -296,7 +296,7 @@ bool Executor::Prepare() {
     }
 
     /* Buffer size */
-    curl_easy_setopt(curl_, CURLOPT_BUFFERSIZE, request_.buffer_size_);
+    curl_easy_setopt(curl_, CURLOPT_BUFFERSIZE, static_cast<long>(request_.buffer_size_));
 
     return true;
 }

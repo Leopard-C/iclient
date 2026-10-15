@@ -26,15 +26,32 @@ const char* to_string(SslCertificateType type) {
 /**
  * @brief Proxy Type.
  */
-int to_curl(ProxyType type) {
-    return type == ProxyType::HTTPS ? CURLPROXY_HTTPS : CURLPROXY_HTTP;
+long to_curl(ProxyType type) {
+    switch (type) {
+        case ProxyType::HTTP:    return CURLPROXY_HTTP;
+        case ProxyType::HTTPS:   return CURLPROXY_HTTPS;
+        case ProxyType::SOCKS4:  return CURLPROXY_SOCKS4;
+        case ProxyType::SOCKS4A: return CURLPROXY_SOCKS4A;
+        case ProxyType::SOCKS5:  return CURLPROXY_SOCKS5;
+        default:                 return CURLPROXY_HTTP;
+    }
 }
 
-static const char* STR_PROXY_TYPE_HTTP  = "HTTP";
-static const char* STR_PROXY_TYPE_HTTPS = "HTTPS";
+static const char* STR_PROXY_TYPE_HTTP    = "HTTP";
+static const char* STR_PROXY_TYPE_HTTPS   = "HTTPS";
+static const char* STR_PROXY_TYPE_SOCKS4  = "SOCKS4";
+static const char* STR_PROXY_TYPE_SOCKS4A = "SOCKS4A";
+static const char* STR_PROXY_TYPE_SOCKS5  = "SOCKS5";
 
 const char* to_string(ProxyType type) {
-    return type == ProxyType::HTTPS ? STR_PROXY_TYPE_HTTPS : STR_PROXY_TYPE_HTTP;
+    switch (type) {
+        case ProxyType::HTTP:    return STR_PROXY_TYPE_HTTP;
+        case ProxyType::HTTPS:   return STR_PROXY_TYPE_HTTPS;
+        case ProxyType::SOCKS4:  return STR_PROXY_TYPE_SOCKS4;
+        case ProxyType::SOCKS4A: return STR_PROXY_TYPE_SOCKS4A;
+        case ProxyType::SOCKS5:  return STR_PROXY_TYPE_SOCKS5;
+        default:                 return STR_PROXY_TYPE_HTTP;
+    }
 }
 
 /**

@@ -51,7 +51,7 @@ const char* to_string(Method method) {
 #undef  CASE
 #define CASE(ver) case Version::V##ver: return CURL_HTTP_VERSION_##ver
 
-int to_curl_http_version(Version ver) {
+long to_curl_http_version(Version ver) {
     switch (ver) {
         CASE(1_0);
         CASE(1_1);

@@ -173,7 +173,7 @@ enum class ContentType {
     APPLICATION_X_WWW_FORM_URLENCODED
 };
 
-int to_curl_http_version(Version ver);
+long to_curl_http_version(Version ver);
 Version from_curl_http_version(int ver);
 StatusCode from_curl_http_response_code(int code);
 

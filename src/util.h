@@ -30,7 +30,7 @@ std::string& trim(std::string& str);
 std::string& to_upper(std::string& str);
 std::string& to_lower(std::string& str);
 
-long get_file_size(const std::string& filename);
+int64_t get_file_size(const std::string& filename);
 
 /**
  * @brief Calculate "Host" filed in request header
