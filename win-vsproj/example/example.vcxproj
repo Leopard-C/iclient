@@ -194,6 +194,7 @@
     <ClCompile Include="..\..\example\test_http_get.cpp" />
     <ClCompile Include="..\..\example\test_http_post.cpp" />
     <ClCompile Include="..\..\example\test_http_put.cpp" />
+    <ClCompile Include="..\..\example\test_proxy.cpp" />
     <ClCompile Include="..\..\example\test_url.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

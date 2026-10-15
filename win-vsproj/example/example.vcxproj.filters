@@ -36,5 +36,8 @@
     <ClCompile Include="..\..\example\test_url.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\example\test_proxy.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿/* VLD (memory leak detector)  */
+/* VLD (memory leak detector)  */
 #ifdef _WIN32
 #  define _USE_VLD 0
 #  if _USE_VLD == 1
@@ -32,6 +32,7 @@ void test_download();
 void test_download_resume();
 void test_download_range();
 void test_download_speed_limit();
+void test_proxy();
 
 void get_terminal_info();
 
@@ -46,37 +47,45 @@ void reset_progress_bar();
 int main() {
     get_terminal_info();
 
-    printf("0. quit\n");
-    printf("1. test_url\n");
-    printf("2. test_http_get\n");
-    printf("3. test_http_post\n");
-    printf("4. test_http_put\n");
-    printf("5. test_download\n");
-    printf("6. test_download_resume\n");
-    printf("7. test_download_range\n");
-    printf("8. test_download_speed_limit\n");
-    printf("Choose item(0-8): ");
-    fflush(stdout);
+    while (true) {
+        printf("\n========================================================\n");
+        printf("  0. quit\n");
+        printf("  1. test_url\n");
+        printf("  2. test_http_get\n");
+        printf("  3. test_http_post\n");
+        printf("  4. test_http_put\n");
+        printf("  5. test_download\n");
+        printf("  6. test_download_resume\n");
+        printf("  7. test_download_range\n");
+        printf("  8. test_download_speed_limit\n");
+        printf("  9. test_proxy\n");
+        printf("Choose item(0-9): ");
+        fflush(stdout);
 
-    int id;
-    int n = scanf("%d", &id);
-    if (n <= 0) {
-        printf("Invalid input!\n");
-        return 1;
-    }
-    printf("------------------------------\n\n");
+        int id;
+        int n = scanf("%d", &id);
+        if (n <= 0) {
+            printf("Invalid input!\n");
+            return 1;
+        }
+        printf("------------------------------\n\n");
 
-    switch (id) {
-        case 0: break;
-        case 1: test_url(); break;
-        case 2: test_http_get(); break;
-        case 3: test_http_post(); break;
-        case 4: test_http_put(); break;
-        case 5: test_download(); break;
-        case 6: test_download_resume(); break;
-        case 7: test_download_range(); break;
-        case 8: test_download_speed_limit(); break;
-        default: printf("Invalid input!\n"); break;
+        if (id == 0) {
+            break;  // quit
+        }
+
+        switch (id) {
+            case 1: test_url(); break;
+            case 2: test_http_get(); break;
+            case 3: test_http_post(); break;
+            case 4: test_http_put(); break;
+            case 5: test_download(); break;
+            case 6: test_download_resume(); break;
+            case 7: test_download_range(); break;
+            case 8: test_download_speed_limit(); break;
+            case 9: test_proxy(); break;
+            default: printf("Invalid input!\n"); break;
+        }
     }
 
 #ifdef _WIN32
